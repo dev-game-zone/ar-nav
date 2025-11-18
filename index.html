@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>QR Navigation MVP</title>
   <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
-  <script src="https://unpkg.com/html5-qrcode@2.3.9/minified/html5-qrcode.min.js"></script>
+  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
   <style>
     body { font-family: Arial; margin: 0; padding: 0; text-align: center; }
     #instruction-box {
@@ -15,7 +15,13 @@
       color: white; padding: 12px 18px;
       border-radius: 8px; font-size: 16px;
     }
-    #qr-reader { width: 100%; max-width: 400px; margin: 20px auto; display: none; }
+    #qr-reader {
+      width: 100%;
+      max-width: 400px;
+      height: 300px; /* MUST have height for camera */
+      margin: 20px auto;
+      visibility: hidden; /* hidden until start */
+    }
     button { padding: 12px 20px; font-size: 16px; margin-top: 20px; }
   </style>
 </head>

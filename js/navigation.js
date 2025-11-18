@@ -6,6 +6,7 @@ let currentRoute = {
     { id: "QR003", instruction: "You have arrived at Meeting Room A.", arrowType: "cone", arrowPos: "0 0 -2", arrowRot: "-90 0 0", arrowScale: "0.3 0.3 0.3" }
   ]
 };
+
 let triggeredMarkers = {};
 currentRoute.markers.forEach(m => triggeredMarkers[m.id] = false);
 
@@ -15,7 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   btn.addEventListener("click", () => {
     btn.style.display = "none";
-    readerDiv.style.display = "block";
+    readerDiv.style.visibility = "visible"; // now visible
 
     const qrScanner = new Html5Qrcode("qr-reader");
     qrScanner.start(
