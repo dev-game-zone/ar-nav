@@ -1,20 +1,31 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>AR Admin Panel</title>
+  <title>AR Admin Panel with 3D Arrows</title>
   <style>
     body { font-family: Arial; padding: 20px; }
-    input, textarea, button { margin: 5px 0; display: block; width: 300px; }
+    input, textarea, select, button { margin: 5px 0; display: block; width: 300px; }
     .marker-item { border: 1px solid #ccc; padding: 10px; margin-bottom: 5px; }
   </style>
 </head>
 <body>
   <h1>AR Navigation Admin Panel</h1>
 
-  <h2>Add / Edit Marker</h2>
-  <input type="text" id="markerId" placeholder="Marker ID (unique)">
-  <input type="text" id="markerPatt" placeholder=".patt file URL (from repo)">
+  <h2>Add / Edit QR Marker</h2>
+  <input type="text" id="markerId" placeholder="Marker ID (QR code)">
   <textarea id="markerInstruction" placeholder="Audio instruction text"></textarea>
+
+  <label>Arrow Type:</label>
+  <select id="arrowType">
+    <option value="cone">Cone</option>
+    <option value="box">Box</option>
+    <option value="gltf">GLTF Model</option>
+  </select>
+
+  <input type="text" id="arrowPos" placeholder="Arrow position X,Y,Z (default 0,0,-2)">
+  <input type="text" id="arrowRot" placeholder="Arrow rotation pitch,yaw,roll (default -90,0,0)">
+  <input type="text" id="arrowScale" placeholder="Arrow scale X,Y,Z (default 0.3,0.3,0.3)">
+
   <button id="addMarkerBtn">Add Marker to Current Route</button>
 
   <h2>Current Route</h2>

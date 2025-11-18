@@ -2,19 +2,36 @@
   "name": "Meeting Room A",
   "markers": [
     {
-      "id": "marker1",
-      "patt": "markers/marker1.patt",
-      "instruction": "Walk straight ahead and scan marker two at the next junction."
+      "id": "QR001",
+      "instruction": "Walk straight into the lobby.",
+      "arrowType": "cone",
+      "arrowPos": "0 0 -2",
+      "arrowRot": "-90 0 0",
+      "arrowScale": "0.3 0.3 0.3"
     },
     {
-      "id": "marker2",
-      "patt": "markers/marker2.patt",
-      "instruction": "Turn left and continue to marker three near the meeting rooms."
+      "id": "QR002",
+      "instruction": "Climb the stairs to the 2nd floor.",
+      "arrowType": "cone",
+      "arrowPos": "0 0 -2",
+      "arrowRot": "-90 0 0",
+      "arrowScale": "0.3 0.3 0.3"
     },
     {
-      "id": "marker3",
-      "patt": "markers/marker3.patt",
-      "instruction": "You have arrived. The meeting rooms are on your right."
+      "id": "QR003",
+      "instruction": "Turn left and continue down the corridor.",
+      "arrowType": "cone",
+      "arrowPos": "0 0 -2",
+      "arrowRot": "-90 0 0",
+      "arrowScale": "0.3 0.3 0.3"
+    },
+    {
+      "id": "QR004",
+      "instruction": "You have arrived at Meeting Room A.",
+      "arrowType": "cone",
+      "arrowPos": "0 0 -2",
+      "arrowRot": "-90 0 0",
+      "arrowScale": "0.3 0.3 0.3"
     }
   ]
 }
