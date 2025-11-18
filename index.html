@@ -18,8 +18,9 @@
 </head>
 <body>
   <h2 style="text-align:center;">Scan QR Code to Navigate</h2>
-  <div id="qr-reader"></div>
-  <div id="instruction-box">Scan the first QR code to start.</div>
+  <button id="startScanBtn" style="display:block; margin: 20px auto;">Start Scan</button>
+  <div id="qr-reader" style="display:none;"></div>
+  <div id="instruction-box">Click “Start Scan” to begin.</div>
 
   <a-scene embedded>
     <a-entity id="arrow-container"></a-entity>
