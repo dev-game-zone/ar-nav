@@ -1,11 +1,13 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>QR Navigation MVP</title>
   <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
   <script src="https://unpkg.com/html5-qrcode@2.3.9/minified/html5-qrcode.min.js"></script>
   <style>
-    body { font-family: Arial; margin: 0; padding: 0; }
+    body { font-family: Arial; margin: 0; padding: 0; text-align: center; }
     #instruction-box {
       position: fixed; bottom: 20px; left: 50%;
       transform: translateX(-50%);
@@ -13,14 +15,15 @@
       color: white; padding: 12px 18px;
       border-radius: 8px; font-size: 16px;
     }
-    #qr-reader { width: 100%; max-width: 400px; margin: 20px auto; }
+    #qr-reader { width: 100%; max-width: 400px; margin: 20px auto; display: none; }
+    button { padding: 12px 20px; font-size: 16px; margin-top: 20px; }
   </style>
 </head>
 <body>
-  <h2 style="text-align:center;">Scan QR Code to Navigate</h2>
-  <button id="startScanBtn" style="display:block; margin: 20px auto;">Start Scan</button>
-  <div id="qr-reader" style="display:none;"></div>
-  <div id="instruction-box">Click “Start Scan” to begin.</div>
+  <h2>Scan QR Code to Navigate</h2>
+  <button id="startScanBtn">Start Scan</button>
+  <div id="qr-reader"></div>
+  <div id="instruction-box">Click "Start Scan" to begin.</div>
 
   <a-scene embedded>
     <a-entity id="arrow-container"></a-entity>

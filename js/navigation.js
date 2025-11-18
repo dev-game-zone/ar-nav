@@ -9,21 +9,21 @@ let currentRoute = {
 let triggeredMarkers = {};
 currentRoute.markers.forEach(m => triggeredMarkers[m.id] = false);
 
-let qrScanner = null;
-
-document.getElementById("startScanBtn").addEventListener("click", () => {
+document.addEventListener("DOMContentLoaded", () => {
   const btn = document.getElementById("startScanBtn");
-  btn.style.display = "none"; // hide button after click
-
   const readerDiv = document.getElementById("qr-reader");
-  readerDiv.style.display = "block"; // show scanner
 
-  qrScanner = new Html5Qrcode("qr-reader");
-  qrScanner.start(
-    { facingMode: "environment" },
-    { fps: 10, qrbox: 250 },
-    qrMessage => handleQrScan(qrMessage)
-  ).catch(err => console.error("Unable to start QR scanner:", err));
+  btn.addEventListener("click", () => {
+    btn.style.display = "none";
+    readerDiv.style.display = "block";
+
+    const qrScanner = new Html5Qrcode("qr-reader");
+    qrScanner.start(
+      { facingMode: "environment" },
+      { fps: 10, qrbox: 250 },
+      qrMessage => handleQrScan(qrMessage)
+    ).catch(err => console.error("Unable to start QR scanner:", err));
+  });
 });
 
 // Handle scanned QR
