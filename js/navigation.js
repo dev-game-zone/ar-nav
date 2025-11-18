@@ -1,42 +1,44 @@
-let currentRoute = null;
+let currentRoute = {
+  name: "Test Route",
+  markers: [
+    { id: "QR001", instruction: "Walk straight ahead.", arrowType: "cone", arrowPos: "0 0 -2", arrowRot: "-90 0 0", arrowScale: "0.3 0.3 0.3" },
+    { id: "QR002", instruction: "Turn left at the corridor.", arrowType: "cone", arrowPos: "0 0 -2", arrowRot: "-90 0 0", arrowScale: "0.3 0.3 0.3" },
+    { id: "QR003", instruction: "You have arrived at Meeting Room A.", arrowType: "cone", arrowPos: "0 0 -2", arrowRot: "-90 0 0", arrowScale: "0.3 0.3 0.3" }
+  ]
+};
 let triggeredMarkers = {};
+currentRoute.markers.forEach(m => triggeredMarkers[m.id] = false);
 
-// Load route JSON
-fetch("data/example-route.json")
-  .then(res => res.json())
-  .then(route => {
-    currentRoute = route;
-    currentRoute.markers.forEach(m => triggeredMarkers[m.id] = false);
-    initQrScanner();
-  });
-
-function initQrScanner() {
+// Initialize QR scanner on page load
+document.addEventListener("DOMContentLoaded", () => {
   const qrCodeScanner = new Html5Qrcode("qr-reader");
   qrCodeScanner.start(
     { facingMode: "environment" },
     { fps: 10, qrbox: 250 },
-    qrMessage => handleQrScan(qrMessage)
-  );
-}
+    qrMessage => handleQrScan(qrMessage),
+    err => { /* optionally ignore errors */ }
+  ).catch(err => console.error("QR scanner failed:", err));
+});
 
+// Handle scanned QR
 function handleQrScan(markerId) {
-  if (!currentRoute) return;
   const marker = currentRoute.markers.find(m => m.id === markerId);
-  if (!marker) return;
+  if (!marker || triggeredMarkers[markerId]) return;
 
-  if (!triggeredMarkers[markerId]) {
-    triggeredMarkers[markerId] = true;
+  triggeredMarkers[markerId] = true;
 
-    // Play audio
-    const utter = new SpeechSynthesisUtterance(marker.instruction);
-    window.speechSynthesis.speak(utter);
-    document.getElementById("instruction-box").textContent = marker.instruction;
+  // Play audio instruction
+  const utter = new SpeechSynthesisUtterance(marker.instruction);
+  window.speechSynthesis.speak(utter);
 
-    // Show 3D arrow
-    showArrow(marker);
-  }
+  // Update on-screen instruction
+  document.getElementById("instruction-box").textContent = marker.instruction;
+
+  // Show 3D arrow
+  showArrow(marker);
 }
 
+// Show 3D arrow in A-Frame
 function showArrow(marker) {
   const container = document.getElementById("arrow-container");
   while (container.firstChild) container.removeChild(container.firstChild);

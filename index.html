@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>QR Navigation with 3D Arrows</title>
+  <title>QR Navigation MVP</title>
   <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
   <script src="https://unpkg.com/html5-qrcode@2.3.9/minified/html5-qrcode.min.js"></script>
-  <script src="js/navigation.js"></script>
   <style>
     body { font-family: Arial; margin: 0; padding: 0; }
     #instruction-box {
@@ -14,7 +13,7 @@
       color: white; padding: 12px 18px;
       border-radius: 8px; font-size: 16px;
     }
-    #qr-reader { width: 100%; max-width: 500px; margin: 20px auto; }
+    #qr-reader { width: 100%; max-width: 400px; margin: 20px auto; }
   </style>
 </head>
 <body>
@@ -22,10 +21,11 @@
   <div id="qr-reader"></div>
   <div id="instruction-box">Scan the first QR code to start.</div>
 
-  <!-- A-Frame Scene for 3D arrows -->
   <a-scene embedded>
     <a-entity id="arrow-container"></a-entity>
     <a-entity camera></a-entity>
   </a-scene>
+
+  <script src="navigation.js"></script>
 </body>
 </html>
