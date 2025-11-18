@@ -1,0 +1,20 @@
+{
+  "name": "Meeting Room A",
+  "markers": [
+    {
+      "id": "marker1",
+      "patt": "markers/marker1.patt",
+      "instruction": "Walk straight ahead and scan marker two at the next junction."
+    },
+    {
+      "id": "marker2",
+      "patt": "markers/marker2.patt",
+      "instruction": "Turn left and continue to marker three near the meeting rooms."
+    },
+    {
+      "id": "marker3",
+      "patt": "markers/marker3.patt",
+      "instruction": "You have arrived. The meeting rooms are on your right."
+    }
+  ]
+}

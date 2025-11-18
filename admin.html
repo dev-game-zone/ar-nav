@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>AR Admin Panel</title>
+  <style>
+    body { font-family: Arial; padding: 20px; }
+    input, textarea, button { margin: 5px 0; display: block; width: 300px; }
+    .marker-item { border: 1px solid #ccc; padding: 10px; margin-bottom: 5px; }
+  </style>
+</head>
+<body>
+  <h1>AR Navigation Admin Panel</h1>
+
+  <h2>Add / Edit Marker</h2>
+  <input type="text" id="markerId" placeholder="Marker ID (unique)">
+  <input type="text" id="markerPatt" placeholder=".patt file URL (from repo)">
+  <textarea id="markerInstruction" placeholder="Audio instruction text"></textarea>
+  <button id="addMarkerBtn">Add Marker to Current Route</button>
+
+  <h2>Current Route</h2>
+  <input type="text" id="routeName" placeholder="Route Name">
+  <div id="markerList"></div>
+  <button id="saveRouteBtn">Save Route</button>
+
+  <script src="js/admin.js"></script>
+</body>
+</html>
