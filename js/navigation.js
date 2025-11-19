@@ -1,76 +1,72 @@
-let currentRoute = {
-  name: "Test Route",
-  markers: [
-    { id: "QR001", instruction: "Walk straight ahead.", arrowType: "cone", arrowPos: "0 0 -2", arrowRot: "-90 0 0", arrowScale: "0.3 0.3 0.3" },
-    { id: "QR002", instruction: "Turn left at the corridor.", arrowType: "cone", arrowPos: "0 0 -2", arrowRot: "-90 0 0", arrowScale: "0.3 0.3 0.3" },
-    { id: "QR003", instruction: "You have arrived at Meeting Room A.", arrowType: "cone", arrowPos: "0 0 -2", arrowRot: "-90 0 0", arrowScale: "0.3 0.3 0.3" }
-  ]
+// Example route data
+const routes = {
+  "QR001": {
+    instruction: "Proceed forward to the main hallway.",
+    arrowDir: "forward"
+  },
+  "QR002": {
+    instruction: "Turn left at the bottom of the stairs.",
+    arrowDir: "left"
+  },
+  "QR003": {
+    instruction: "Head up the stairs to the right.",
+    arrowDir: "right"
+  },
+  "QR004": {
+    instruction: "You arrived at the room!",
+    arrowDir: "none"
+  }
 };
 
-let triggeredMarkers = {};
-currentRoute.markers.forEach(m => triggeredMarkers[m.id] = false);
+let qrScanner;
 
+// Create AR arrow
+function showARArrow(direction) {
+  const container = document.getElementById("arrow-container");
+  container.innerHTML = ""; // clear old arrow
+
+  if (direction === "none") return;
+
+  let rotation;
+  if (direction === "forward") rotation = "0 0 0";
+  if (direction === "left")    rotation = "0 90 0";
+  if (direction === "right")   rotation = "0 -90 0";
+
+  const arrow = document.createElement("a-entity");
+  arrow.setAttribute("gltf-model", "#arrowModel");
+  arrow.setAttribute("position", "0 0 -2");
+  arrow.setAttribute("rotation", rotation);
+  arrow.setAttribute("scale", "1 1 1");
+
+  container.appendChild(arrow);
+}
+
+// Handle scanned QR code
+function handleScan(code) {
+  const info = routes[code];
+  if (!info) return;
+
+  document.getElementById("instruction-box").innerText = info.instruction;
+  showARArrow(info.arrowDir);
+}
+
+// Initialize after DOM load
 document.addEventListener("DOMContentLoaded", () => {
   const btn = document.getElementById("startScanBtn");
-  const readerDiv = document.getElementById("qr-reader");
 
   btn.addEventListener("click", () => {
-    btn.style.display = "none";
-    readerDiv.style.visibility = "visible"; // now visible
+    btn.style.display = "none"; // hide button
 
-    const qrScanner = new Html5Qrcode("qr-reader");
+    const readerDivId = "qr-reader";
+
+    qrScanner = new Html5Qrcode(readerDivId);
+
     qrScanner.start(
       { facingMode: "environment" },
       { fps: 10, qrbox: 250 },
-      qrMessage => handleQrScan(qrMessage)
-    ).catch(err => console.error("Unable to start QR scanner:", err));
+      qrCodeMessage => handleScan(qrCodeMessage),
+      errorMessage => {}
+    )
+    .catch(err => console.error("Camera error:", err));
   });
 });
-
-// Handle scanned QR
-function handleQrScan(markerId) {
-  const marker = currentRoute.markers.find(m => m.id === markerId);
-  if (!marker || triggeredMarkers[markerId]) return;
-
-  triggeredMarkers[markerId] = true;
-
-  // Play audio instruction
-  const utter = new SpeechSynthesisUtterance(marker.instruction);
-  window.speechSynthesis.speak(utter);
-
-  // Update on-screen instruction
-  document.getElementById("instruction-box").textContent = marker.instruction;
-
-  // Show 3D arrow
-  showArrow(marker);
-}
-
-// Show 3D arrow in A-Frame
-function showArrow(marker) {
-  const container = document.getElementById("arrow-container");
-  while (container.firstChild) container.removeChild(container.firstChild);
-
-  let arrow;
-  const pos = marker.arrowPos.split(/[ ,]+/).map(Number);
-  const rot = marker.arrowRot.split(/[ ,]+/).map(Number);
-  const scale = marker.arrowScale.split(/[ ,]+/).map(Number);
-
-  if (marker.arrowType === "cone") {
-    arrow = document.createElement("a-cone");
-    arrow.setAttribute("height", 0.5);
-    arrow.setAttribute("radius-bottom", 0.2);
-    arrow.setAttribute("radius-top", 0);
-    arrow.setAttribute("color", "#FF0000");
-  } else if (marker.arrowType === "box") {
-    arrow = document.createElement("a-box");
-    arrow.setAttribute("color", "#FF0000");
-  } else if (marker.arrowType === "gltf") {
-    arrow = document.createElement("a-entity");
-    arrow.setAttribute("gltf-model", "https://cdn.jsdelivr.net/gh/KhronosGroup/glTF-Sample-Models/2.0/Arrow/glTF/Arrow.gltf");
-  }
-
-  arrow.setAttribute("position", pos.join(" "));
-  arrow.setAttribute("rotation", rot.join(" "));
-  arrow.setAttribute("scale", scale.join(" "));
-  container.appendChild(arrow);
-}
