@@ -185,20 +185,36 @@ function handleScan(data) {
             // Display the instruction from the marker
             document.getElementById('instruction-box').innerText = marker.instruction || `Loaded marker ${id}`;
 
-            // Hide scanner UI to show AR scene
+            // Hide ALL scanner UI elements to reveal AR scene
             const qrReader = document.getElementById('qr-reader');
-            if (qrReader) qrReader.style.display = 'none';
-            const manualDiv = qrReader ? qrReader.nextElementSibling : null;
-            if (manualDiv) manualDiv.style.display = 'none';
+            if (qrReader) {
+              qrReader.style.display = 'none';
+              qrReader.style.visibility = 'hidden';
+            }
+
+            // Hide manual input box
+            const manualInputBox = document.querySelector('div[style*="top: 100px"]');
+            if (manualInputBox) manualInputBox.style.display = 'none';
+
+            // Hide start button
+            const startBtn = document.getElementById('start-scan');
+            if (startBtn && startBtn.parentElement) startBtn.parentElement.style.display = 'none';
+
+            console.log('🎬 Scanner UI hidden, revealing A-Frame scene...');
 
             // Stop scanners (only if running)
             if (qrScanner) {
-              qrScanner.stop().then(() => qrScanner.clear()).catch(e => {
-                // Ignore "not running" errors - this is expected on subsequent scans
-                if (!e.includes('not running') && !e.includes('not paused')) {
-                  console.warn('Failed to stop scanner', e);
-                }
-              });
+              try {
+                qrScanner.stop().then(() => {
+                  qrScanner.clear();
+                  console.log('Primary scanner stopped');
+                }).catch(e => {
+                  // Silently ignore scanner stop errors
+                  console.log('Scanner already stopped (OK)');
+                });
+              } catch (e) {
+                // Scanner might not be started yet
+              }
             }
             stopFallbackScanner();
 
@@ -211,6 +227,7 @@ function handleScan(data) {
 
             console.log('Arrow placed with position:', marker.arrowPos, 'rotation:', marker.arrowRot);
             console.log('✅ AR Scene should now be visible. Look for the 3D arrow.');
+            console.log('Use your MOUSE to drag and look around the 3D scene!');
           } else {
             console.error('Marker id not found in routes.json');
             document.getElementById('instruction-box').innerText = 'Unknown QR ID: ' + id;

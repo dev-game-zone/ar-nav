@@ -24,19 +24,39 @@
 
   <style>
     body { margin: 0; overflow: hidden; }
-    #qr-reader {
+    
+    /* A-Frame scene - behind everything initially */
+    a-scene {
+      position: fixed !important;
+      top: 0;
+      left: 0;
       width: 100%;
-      height: 100vh;
+      height: 100%;
+      z-index: 1;
+    }
+    
+    #qr-reader {
+      position: fixed;
+      top: 40px;
+      left: 0;
+      right: 0;
+      bottom: 0;
       background: #000;
       display: flex;
       align-items: center;
       justify-content: center;
+      z-index: 100;
     }
     #instruction-box {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
       padding: 10px;
       text-align: center;
       background: #eee;
       font-family: sans-serif;
+      z-index: 200;
     }
     /* Tunnel style overlay */
     #qr-tunnel {
@@ -109,7 +129,12 @@
   <a-sky color="#87CEEB"></a-sky>
   
   <!-- Ground plane for reference -->
-  <a-plane position="0 0 0" rotation="-90 0 0" width="20" height="20" color="#7BC8A4"></a-plane>
+  <a-plane position="0 0 -4" rotation="0 0 0" width="20" height="20" color="#7BC8A4"></a-plane>
+  
+  <!-- Test sphere - should be impossible to miss -->
+  <a-sphere position="0 1.6 -2" radius="0.5" color="#FF0000"></a-sphere>
+  <a-box position="-1 1.6 -3" width="0.5" height="0.5" depth="0.5" color="#00FF00"></a-box>
+  <a-box position="1 1.6 -3" width="0.5" height="0.5" depth="0.5" color="#0000FF"></a-box>
 
   <!-- Assets -->
   <a-assets>
