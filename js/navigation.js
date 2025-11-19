@@ -1,72 +1,73 @@
-// Example route data
-const routes = {
-  "QR001": {
-    instruction: "Proceed forward to the main hallway.",
-    arrowDir: "forward"
-  },
-  "QR002": {
-    instruction: "Turn left at the bottom of the stairs.",
-    arrowDir: "left"
-  },
-  "QR003": {
-    instruction: "Head up the stairs to the right.",
-    arrowDir: "right"
-  },
-  "QR004": {
-    instruction: "You arrived at the room!",
-    arrowDir: "none"
-  }
-};
+let qrScanner = null;
+let destination = null;
+let userCoords = null;
 
-let qrScanner;
-
-// Create AR arrow
-function showARArrow(direction) {
-  const container = document.getElementById("arrow-container");
-  container.innerHTML = ""; // clear old arrow
-
-  if (direction === "none") return;
-
-  let rotation;
-  if (direction === "forward") rotation = "0 0 0";
-  if (direction === "left")    rotation = "0 90 0";
-  if (direction === "right")   rotation = "0 -90 0";
-
-  const arrow = document.createElement("a-entity");
-  arrow.setAttribute("gltf-model", "#arrowModel");
-  arrow.setAttribute("position", "0 0 -2");
-  arrow.setAttribute("rotation", rotation);
-  arrow.setAttribute("scale", "1 1 1");
-
-  container.appendChild(arrow);
-}
-
-// Handle scanned QR code
-function handleScan(code) {
-  const info = routes[code];
-  if (!info) return;
-
-  document.getElementById("instruction-box").innerText = info.instruction;
-  showARArrow(info.arrowDir);
-}
-
-// Initialize after DOM load
 document.addEventListener("DOMContentLoaded", () => {
-  const btn = document.getElementById("startScanBtn");
+  console.log("Starting QR scanner…");
 
-  btn.addEventListener("click", () => {
-    btn.style.display = "none"; // hide button
+  const readerDivId = "qr-reader";
+  const instructionBox = document.getElementById("instruction-box");
 
-    const readerDivId = "qr-reader";
+  qrScanner = new Html5Qrcode(readerDivId);
 
-    qrScanner = new Html5Qrcode(readerDivId);
-
-    qrScanner.start(
-      { facingMode: "environment" },
-      { fps: 10, qrbox: 250 },
-      qrCodeMessage => handleScan(qrCodeMessage),
-      errorMessage => {}
-    )
-    .catch(err => console.error("Camera error:", err));
+  // Start immediately
+  qrScanner.start(
+    { facingMode: "environment" },
+    { fps: 10, qrbox: 250 },
+    qrCodeMessage => handleScan(qrCodeMessage),
+    err => {}
+  )
+  .then(() => {
+    instructionBox.innerText = "Point the camera at a QR code.";
+  })
+  .catch(err => {
+    instructionBox.innerText = "Camera failed: " + err;
+    console.error(err);
   });
 });
+
+// Parse QR → Extract GPS target data
+function handleScan(data) {
+  console.log("QR Scanned:", data);
+
+  try {
+    destination = JSON.parse(data);
+    if (!destination.lat || !destination.lng) throw "Invalid QR format";
+
+    document.getElementById("instruction-box").innerText =
+      "Destination loaded! Move your phone to calibrate.";
+
+    placeArrow();
+  } catch (e) {
+    console.error("QR parse error:", e);
+  }
+}
+
+// Main AR arrow placement
+function placeArrow() {
+  const arrow = document.getElementById("arrow");
+  arrow.setAttribute("visible", "true");
+
+  // GPS Camera listener
+  window.addEventListener("gps-camera-update-position", e => {
+    userCoords = {
+      lat: e.detail.position.latitude,
+      lng: e.detail.position.longitude,
+    };
+
+    updateArrowRotation();
+  });
+}
+
+// Rotate arrow toward destination
+function updateArrowRotation() {
+  if (!userCoords || !destination) return;
+
+  const dx = destination.lng - userCoords.lng;
+  const dy = destination.lat - userCoords.lat;
+
+  const bearing = Math.atan2(dx, dy) * (180 / Math.PI);
+
+  const arrow = document.getElementById("arrow");
+  arrow.setAttribute("rotation", `0 ${bearing} 0`);
+}

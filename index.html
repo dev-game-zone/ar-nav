@@ -1,51 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>QR Navigation MVP</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AR Navigation</title>
 
-  <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
-  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+  <!-- A-Frame -->
+  <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+
+  <!-- GPS / Location -->
+  <script src="https://unpkg.com/aframe-gps-entity-place/dist/aframe-gps-entity-place.min.js"></script>
+
+  <!-- HTML5 QR Scanner -->
+  <script src="https://unpkg.com/html5-qrcode"></script>
+
+  <!-- Your navigation JS -->
+  <script defer src="navigation.js"></script>
 
   <style>
-    body { font-family: Arial; margin: 0; padding: 0; text-align: center; }
-
+    body { margin: 0; overflow: hidden; }
     #qr-reader {
       width: 100%;
-      max-width: 380px;
-      height: 300px;  /* REQUIRED */
-      margin: 20px auto;
-      border: 1px solid #ccc;
+      height: 200px;
+      background: #000;
     }
-
     #instruction-box {
-      position: fixed;
-      bottom: 20px;
-      left: 50%; transform: translateX(-50%);
-      background: rgba(0,0,0,0.6);
-      color: white;
-      padding: 12px 18px;
-      border-radius: 8px;
-      font-size: 16px;
-      max-width: 90%;
+      padding: 10px;
+      text-align: center;
+      background: #eee;
+      font-family: sans-serif;
     }
   </style>
 </head>
-
 <body>
 
-  <h2>Scan QR Code to Navigate</h2>
+  <div id="instruction-box">Starting camera…</div>
   <div id="qr-reader"></div>
-  <div id="instruction-box">Initializing camera…</div>
 
   <!-- AR Scene -->
-  <a-scene embedded>
-    <a-entity id="arrow-container"></a-entity>
-    <a-entity camera></a-entity>
-  </a-scene>
+  <a-scene 
+      vr-mode-ui="enabled: false"
+      embedded
+      renderer="logarithmicDepthBuffer: true"
+      gps-camera rotation-reader>
 
-  <script src="navigation.js"></script>
+    <!-- Assets -->
+    <a-assets>
+      <a-asset-item 
+        id="arrowModel"
+        src="assets/arrow.gltf">
+      </a-asset-item>
+    </a-assets>
+
+    <!-- Arrow entity (initially hidden) -->
+    <a-entity id="arrow"
+      gltf-model="#arrowModel"
+      scale="2 2 2"
+      visible="false">
+    </a-entity>
+
+  </a-scene>
 
 </body>
 </html>
