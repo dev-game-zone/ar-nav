@@ -218,12 +218,22 @@ function handleScan(data) {
             }
             stopFallbackScanner();
 
-            // Apply marker properties to arrow and show it
+            // If marker contains GPS coordinates, use them as the destination
+            if (marker.lat && marker.lng) {
+              destination = { lat: marker.lat, lng: marker.lng };
+            }
+
+            // Apply marker visual properties to arrow and show it
             const arrow = document.getElementById('arrow');
             if (marker.arrowPos) arrow.setAttribute('position', marker.arrowPos);
             if (marker.arrowRot) arrow.setAttribute('rotation', marker.arrowRot);
             if (marker.arrowScale) arrow.setAttribute('scale', marker.arrowScale);
             arrow.setAttribute('visible', 'true');
+
+            // If we have a lat/lng destination, attach gps-entity-place so it appears in world
+            if (destination && destination.lat && destination.lng) {
+              arrow.setAttribute('gps-entity-place', `latitude: ${destination.lat}; longitude: ${destination.lng};`);
+            }
 
             console.log('Arrow placed with position:', marker.arrowPos, 'rotation:', marker.arrowRot);
             console.log('✅ AR Scene should now be visible. Look for the 3D arrow.');
@@ -358,6 +368,7 @@ function placeArrow() {
       };
 
       updateArrowRotation();
+      checkArrival();
     });
   }
 }
@@ -383,6 +394,37 @@ function updateArrowRotation() {
   const arrow = document.getElementById("arrow");
   // A-Frame rotation: yaw around Y axis
   arrow.setAttribute("rotation", `0 ${brng} 0`);
+}
+
+// Compute distance (meters) between two lat/lng points (Haversine)
+function distanceMeters(a, b) {
+  const R = 6371000; // meters
+  const toRad = d => d * Math.PI / 180;
+  const dLat = toRad(b.lat - a.lat);
+  const dLon = toRad(b.lng - a.lng);
+  const lat1 = toRad(a.lat);
+  const lat2 = toRad(b.lat);
+
+  const sinDLat = Math.sin(dLat / 2);
+  const sinDLon = Math.sin(dLon / 2);
+  const aa = sinDLat * sinDLat + sinDLon * sinDLon * Math.cos(lat1) * Math.cos(lat2);
+  const c = 2 * Math.atan2(Math.sqrt(aa), Math.sqrt(1 - aa));
+  return R * c;
+}
+
+// Check arrival and update UI
+function checkArrival() {
+  if (!userCoords || !destination) return;
+  const dist = distanceMeters(userCoords, destination);
+  const instructionBox = document.getElementById('instruction-box');
+  instructionBox.innerText = `Move to: ${dist.toFixed(0)}m`;
+  // Arrival threshold: 8 meters
+  if (dist <= 8) {
+    instructionBox.innerText = 'You have arrived at the destination.';
+    // Optionally hide arrow when arrived
+    const arrow = document.getElementById('arrow');
+    if (arrow) arrow.setAttribute('visible', 'false');
+  }
 }
 
 function showArrow(direction) {
