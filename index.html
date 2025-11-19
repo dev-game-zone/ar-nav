@@ -5,45 +5,30 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>QR Navigation MVP</title>
 
-  <!-- A-Frame -->
   <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
-
-  <!-- QR Reader -->
   <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0; padding: 0;
-      text-align: center;
-    }
+    body { font-family: Arial; margin: 0; padding: 0; text-align: center; }
 
     #qr-reader {
       width: 100%;
       max-width: 380px;
-      height: 300px;
+      height: 300px;  /* REQUIRED */
       margin: 20px auto;
       border: 1px solid #ccc;
     }
 
     #instruction-box {
       position: fixed;
-      bottom: 15px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(0,0,0,0.65);
+      bottom: 20px;
+      left: 50%; transform: translateX(-50%);
+      background: rgba(0,0,0,0.6);
       color: white;
       padding: 12px 18px;
       border-radius: 8px;
       font-size: 16px;
       max-width: 90%;
-    }
-
-    button {
-      padding: 12px 20px;
-      font-size: 16px;
-      margin-top: 20px;
-      cursor: pointer;
     }
   </style>
 </head>
@@ -51,20 +36,16 @@
 <body>
 
   <h2>Scan QR Code to Navigate</h2>
-
-  <button id="startScanBtn">Start Scan</button>
-
-  <!-- Camera window MUST have height and visibility -->
   <div id="qr-reader"></div>
+  <div id="instruction-box">Initializing camera…</div>
 
-  <div id="instruction-box">Click "Start Scan" to begin.</div>
-
-  <!-- AR scene -->
+  <!-- AR Scene -->
   <a-scene embedded>
     <a-entity id="arrow-container"></a-entity>
     <a-entity camera></a-entity>
   </a-scene>
 
   <script src="navigation.js"></script>
+
 </body>
 </html>
