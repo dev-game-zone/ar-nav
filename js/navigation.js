@@ -71,3 +71,15 @@ function updateArrowRotation() {
   const arrow = document.getElementById("arrow");
   arrow.setAttribute("rotation", `0 ${bearing} 0`);
 }
+
+function showArrow(direction) {
+  const arrow = document.getElementById("arrow");
+
+  let rotation;
+  if (direction === "forward") rotation = "0 0 0";
+  if (direction === "left") rotation = "0 90 0";
+  if (direction === "right") rotation = "0 -90 0";
+
+  arrow.setAttribute("rotation", rotation);
+  arrow.setAttribute("visible", "true");
+}

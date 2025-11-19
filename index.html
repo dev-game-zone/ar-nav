@@ -38,28 +38,28 @@
   <div id="qr-reader"></div>
 
   <!-- AR Scene -->
-  <a-scene 
-      vr-mode-ui="enabled: false"
-      embedded
-      renderer="logarithmicDepthBuffer: true"
-      gps-camera rotation-reader>
+<a-scene 
+    vr-mode-ui="enabled: false"
+    embedded
+    renderer="logarithmicDepthBuffer: true"
+    gps-camera rotation-reader>
 
-    <!-- Assets -->
-    <a-assets>
-      <a-asset-item 
-        id="arrowModel"
-        src="assets/arrow.gltf">
-      </a-asset-item>
-    </a-assets>
+  <!-- Assets -->
+  <a-assets>
+    <a-asset-item 
+      id="arrowModel"
+      src="assets/arrow.gltf">
+    </a-asset-item>
+  </a-assets>
 
-    <!-- Arrow entity (initially hidden) -->
-    <a-entity id="arrow"
-      gltf-model="#arrowModel"
-      scale="2 2 2"
-      visible="false">
-    </a-entity>
+  <!-- Arrow entity (initially hidden) -->
+  <a-entity id="arrow"
+    gltf-model="#arrowModel"
+    scale="2 2 2"
+    visible="false">
+  </a-entity>
 
-  </a-scene>
+</a-scene>
 
 </body>
 </html>
